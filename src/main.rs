@@ -4,7 +4,7 @@ use std::io::Write; // necesario para el flush
 use std::process::Command; // importar struct Command 
 fn main() {
     loop{
-        print!("osh :3 >>"); // imprime sin salto de linea
+        print!("trash :3 >>"); // imprime sin salto de linea
         stdout().flush().expect("No se pudo vaciar stdout"); // vacia el bufer de salida. forzando a que el texto se imprima inmediatamente en la consola, expect por politicas de Rust  
         let mut input = String::from("");
         stdin().read_line(&mut input).unwrap();
@@ -25,7 +25,7 @@ fn main() {
                         Ok(mut command_child) => {
                             command_child.wait().unwrap(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
                             }
-                        Err(e) => println!("osh: El comando '{}' no existe papu, el epico error es: {}", command, e),
+                        Err(e) => println!("trash: El comando '{}' no existe papu, el epico error es: {}", command, e),
                     }
                 },
             }
@@ -47,19 +47,19 @@ fn execute_cd(mut args: std::str::SplitWhitespace){ // recibe el iterador con lo
                                                                     // Result ya que posiblemente el
                                                                     // nombre del directorio de
                                                                     // errores
-            println!("osh: cd: {}", e);
+            println!("trash: cd: {}", e);
         }
     } else {
         match std::env::var("HOME") { // libreria que le pide al SO la variable de entorno
             Ok(ruta_home) => {
                 // Si la encontramos, hacemos la syscall para movernos al home
                 if let Err(e) = std::env::set_current_dir(&ruta_home) {
-                    println!("osh: cd: No se pudo ir a HOME: {}", e);
+                    println!("trash: cd: No se pudo ir a HOME: {}", e);
                 }
             }
             Err(_) => {
                 // si la variable no existe (no creo pero por si acaso)
-                println!("osh: cd: eso no existe jasdjsadja");
+                println!("trash: cd: eso no existe jasdjsadja");
             }
     }
 }
