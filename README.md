@@ -1,4 +1,4 @@
-# trash — A Tiny Shell written in Rust 🗑️ :3
+# trash — A Tiny Shell written in Rust :3
 trash es un prototipo de interprete de comandos (shell) minimalista desarrollado en Rust como un proyecto para aprender y reirme un poco. Su nombre es una parodia de bash. El objetivo principal fue divertirse mientras se exploraba la gestión de procesos en Linux/Unix y el estricto sistema de tipos y memoria de Rust.
 
 ## Características Actuales
