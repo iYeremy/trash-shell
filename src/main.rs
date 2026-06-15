@@ -50,7 +50,16 @@ fn execute_cd(mut args: std::str::SplitWhitespace){ // recibe el iterador con lo
             println!("osh: cd: {}", e);
         }
     } else {
-        // no he mirado como agregar variables de entorno como $HOME, coloque un simple print
-        println!("osh: cd: se requiere un argumento");
+        match std::env::var("HOME") { // libreria que le pide al SO la variable de entorno
+            Ok(ruta_home) => {
+                // Si la encontramos, hacemos la syscall para movernos al home
+                if let Err(e) = std::env::set_current_dir(&ruta_home) {
+                    println!("osh: cd: No se pudo ir a HOME: {}", e);
+                }
+            }
+            Err(_) => {
+                // si la variable no existe (no creo pero por si acaso)
+                println!("osh: cd: eso no existe jasdjsadja");
+            }
     }
 }
