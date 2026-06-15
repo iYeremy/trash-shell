@@ -25,8 +25,10 @@ fn main() {
             _ => {
                 let mut command_child = Command::new(command).args(args).spawn(); // Result
                 match command_child { // match para el manejo de errores con comandos que no existen
-                    Ok(mut command_child) => command_child.wait().unwrap(), // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
-                    _ => println!("El comando no existe"),
+                    Ok(mut command_child) => {
+                        command_child.wait().unwrap(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
+                        }
+                    Err(e) => println!("osh: El comando '{}' no existe papu, el epico error es: {}", command, e),
                 }
             },
         }
