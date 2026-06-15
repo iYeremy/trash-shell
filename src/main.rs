@@ -5,36 +5,33 @@ use std::process::Command; // importar struct Command
 fn main() {
     loop{
         print!("osh :3 >>"); // imprime sin salto de linea
-        stdout().flush(); // vacia el bufer de salida. forzando a que el texto se imprima inmediatamente en la consola  
+        stdout().flush().expect("No se pudo vaciar stdout"); // vacia el bufer de salida. forzando a que el texto se imprima inmediatamente en la consola, expect por politicas de Rust  
         let mut input = String::from("");
         stdin().read_line(&mut input).unwrap();
 
         let mut parts = input.trim().split_whitespace(); // separador de espacios (iterador)
 
-        let command = parts.next().unwrap(); // toma el primer campo de parts y se lo asigna a
-                                             // command, luego quita este campo de parts
-
-        let args = parts; // variable inmutable para argumentos restantes
+        if let Some(command) = parts.next() { // toma el primer campo de parts y se lo asigna a command, luego quita ese campo en parts
+            let args = parts; // variable inmutable para argumentos restantes
         
-        match command {
-            // comandos built-in
-            "cd" => execute_cd(args),
-            "exit" => std::process::exit(0), // =return, cierra el proceso padre (shell) ahora mismo con el código de salida 0 (exito)
+            match command {
+                // comandos built-in
+                "cd" => execute_cd(args),
+                "exit" => std::process::exit(0), // =return, cierra el proceso padre (shell) ahora mismo con el código de salida 0 (exito)
 
-            // procesos hijos
-            _ => {
-                let mut command_child = Command::new(command).args(args).spawn(); // Result
-                match command_child { // match para el manejo de errores con comandos que no existen
-                    Ok(mut command_child) => {
-                        command_child.wait().unwrap(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
-                        }
-                    Err(e) => println!("osh: El comando '{}' no existe papu, el epico error es: {}", command, e),
-                }
-            },
+                // procesos hijos
+                _ => {
+                    match Command::new(command).args(args).spawn() { // match para el manejo de errores con comandos que no existen [Result]
+                        Ok(mut command_child) => {
+                            command_child.wait().unwrap(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
+                            }
+                        Err(e) => println!("osh: El comando '{}' no existe papu, el epico error es: {}", command, e),
+                    }
+                },
+            }
         }
     }
 }
-
 // de forma modular separo por funciones, asi el match queda mas limpio 
 
 fn execute_cd(mut args: std::str::SplitWhitespace){ // recibe el iterador con los argumentos

@@ -14,6 +14,7 @@
 
 8. Las funciones son como un mundo aparte, un parametro que recibe una variable inmutable pero en este propio parametro tratamos a la variable como mutable funciona
 
+9. _ es un comodin donde permite todo en un match o una variable que se autodestruye inmediatamente con si fuera fantasma, Result tiene un campo #[must_use] que quiere decir que debe ser usado, viene perfectecto para cuando no nos importa usar algo ni revisarlo
 Flujo del shell
 
 [ Usuario escribe un comando ]
