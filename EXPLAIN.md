@@ -6,4 +6,29 @@
 
 4. Al usar el shell, spawn() le dice al SO "lanza este proceso hijo" y tambien hay que tener en cuenta que spawn es asincrono, apenas lanza el proceso hijo sigue el loop sin esperar que el hijo termine. El wait() le dice "para tu propia ejecucion aqui mismo. quedate congelado hasta que el proceso hijo termine de hacer su trabajo y muera". Tambien asi evitamos los procesos Zombies donde el hijo muere pero sigue ocupando espacio en la tabla de procesos y el padre no hizo el wait(). Osea basicamente el wait() tambien le sirve al padre para ver los resultados de su hijo
 
-5. 
+5. Se busco una forma para que los argumentos se pudieran leer, se uso funciones de String para hacer una fila de cadenas de texto y despues irlas tratando, en este caso command es el primer campo y los argumentos son los posteriores, entonces al agregar el campo a command los argumentos no deben tener este mismo campo.
+
+6. Hay comandos que el shell no puede enviar a otros procesos. Se trata de cosas que afectan internamente del Shell y por tanto deben ser incorpordas dentro del propio shell como casos externos.
+
+7. Un proceso hijo NUNCA puede modificar el entorno de su proceso padre. Cuando se hace el Command::new(command).spawn() lo que hacemos en que el proceso padre (shell) invocara al proceso hijo (command) y este proceso hijo llamara al binario (ejem /bin/ls), este hijo hereda la carpeta actual del padre hace su trabajo y despues muere. cd es un comando interno, es decir debe ser tratado desde el propio proceso padre osea del shell ya que no existe un binario independiente y es normal porque el hijo SI cambia su propio directorio, pero cuando muere el papa sigue en el base de donde estaba, ya que no se puede incumplir la regla 6. Entonces es necesario tratar estos comandos internos con un match
+
+8. Las funciones son como un mundo aparte, un parametro que recibe una variable inmutable pero en este propio parametro tratamos a la variable como mutable funciona
+
+Flujo del shell
+
+[ Usuario escribe un comando ]
+                           │
+             ▲             ▼
+             │     ¿Es un Built-in? (cd, exit...)
+             │      /            \
+             │    SÍ              NO
+             │    /                \
+    [ Lo ejecuta el ]        [ Hace .spawn() ]
+    [ propio Padre  ]        [ Crea Proceso Hijo ]
+             │                        │
+             │                        ▼
+             │               [ Padre hace .wait() ]
+             │                        │
+             └─────────────◄──────────┘
+
+
