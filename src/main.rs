@@ -18,13 +18,13 @@ fn main() {
         
         match command {
             // comandos built-in
-            "cd" => execute_cd(args), 
+            "cd" => execute_cd(args),
+            "exit" => std::process:exit(0), // =return, cierra el proceso padre (shell) ahora mismo con el código de salida 0 (exito)
 
             // procesos hijos
             _ => {
-            let mut command_child = Command::new(command).args(args).spawn().unwrap();
-
-            command_child.wait(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
+                let mut command_child = Command::new(command).args(args).spawn().unwrap();
+                command_child.wait(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
             },
         }
     }
