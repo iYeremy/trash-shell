@@ -9,10 +9,14 @@ fn main() {
         let mut input = String::from("");
         stdin().read_line(&mut input).unwrap();
 
-        let command = input.trim(); // .trim elimina los espacios en blanco, tabulaciones y saltos de linea
+        let mut parts = input.trim().split_whitespace(); // separador de espacios (iterador)
+                                                         
+        let command = parts.next().unwrap(); // toma el primer campo de parts y se lo asigna a
+                                             // command, luego quita este campo de parts
 
+        let args = parts; // variable inmutable para argumentos restantes
         
-        let mut command_child = Command::new(command).spawn().unwrap();
+        let mut command_child = Command::new(command).args(args).spawn().unwrap();
 
         command_child.wait(); // espera hasta que el proceso hijo termine de completarse para asi continuar el floop
     }
